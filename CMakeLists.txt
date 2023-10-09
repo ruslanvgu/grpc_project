@@ -101,12 +101,6 @@ target_link_libraries(grpc_server
     ${_GRPC_GRPCPP}
     ${_PROTOBUF_LIBPROTOBUF}
 )
-add_executable(grpc_client grpc_client.cpp)
-target_link_libraries(grpc_client 
-    ${_REFLECTION}
-    ${_GRPC_GRPCPP}
-    ${_PROTOBUF_LIBPROTOBUF}
-)
 #foreach(_target grpc_server)
  # add_executable(${_target} "${_target}.cpp")
  # target_link_libraries(${_target}
