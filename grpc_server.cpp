@@ -2,29 +2,37 @@
 #include <memory>
 #include <string>
 #include <grpcpp/grpcpp.h>
-#include "example.grpc.pb.h"
+#include "authorization.grpc.pb.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
-using example::ExampleService;
-using example::HelloRequest;
-using example::HelloResponse;
 
-class ExampleServiceImpl final : public ExampleService::Service {
-  Status SayHello(ServerContext* context, const HelloRequest* request,
-                  HelloResponse* response) override {
-    std::string name = request->name();
-    std::string message = "Hello, " + name + "!";
-    response->set_message(message);
+using auth::AuthService;
+using auth::LoginRequest;
+using auth::LoginResponse;
+
+class AuthServiceImpl final : public AuthService::Service {
+  
+  Status Login(ServerContext* context, const LoginRequest* request, LoginResponse* response) override {
+    std::string user_name = request->username();
+    std::string password = request->password();
+    std::string token;
+    if(user_name == password)
+      token = "Success";
+    else 
+      token = "Fail";
+    response->set_token(token);
     return Status::OK;
   }
+
+  // next functions ..
 };
 
 void RunServer() {
   std::string server_address("0.0.0.0:50051");
-  ExampleServiceImpl service;
+  AuthServiceImpl service;
 
   ServerBuilder builder;
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
